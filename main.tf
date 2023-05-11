@@ -33,3 +33,17 @@ resource "scaleway_k8s_pool" "default" {
   wait_for_pool_ready = true
   depends_on          = [scaleway_instance_security_group.kapsule]
 }
+
+resource "scaleway_rdb_instance" "main" {
+  name           = "pn-rdb"
+  node_type      = "DB-DEV-S"
+  engine         = "PostgreSQL-14"
+  is_ha_cluster  = true
+  disable_backup = true
+  user_name      = "username"
+  password       = "thiZ_is_v&ry_s3cret" # Obviously change password here or generate one at runtime through null_resource and display it via output.
+  private_network {
+    pn_id = scaleway_vpc_private_network.kapsule.id
+  }
+}
+
